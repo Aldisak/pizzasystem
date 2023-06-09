@@ -1,3 +1,5 @@
+using PizzaSystem.Core.Interfaces;
+
 namespace PizzaSystem.Core.Models;
 public sealed record Ingredient : IEntity<Ingredient>
 {

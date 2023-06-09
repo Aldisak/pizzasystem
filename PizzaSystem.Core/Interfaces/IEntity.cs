@@ -1,11 +1,11 @@
-namespace PizzaSystem.Core.Models;
+namespace PizzaSystem.Core.Interfaces;
 
 public interface IEntity<T>
 {
     ID<T> Id { get; }
 }
 
-public struct ID<T>
+public record struct ID<T>
 {
     private Guid _Id { get; }
 
