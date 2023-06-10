@@ -1,19 +1,21 @@
+using PizzaSystem.Core.Models;
+
 namespace PizzaSystem.Core.Interfaces;
 
 public interface IEntity<T>
 {
-    ID<T> Id { get; }
+    Id<T> Id { get; }
 }
 
-public record struct ID<T>
+public record struct Id<T>
 {
     private Guid _Id { get; }
 
-    private ID(Guid id)
+    private Id(Guid id)
     {
         _Id = id;
     }
 
-    public static explicit operator ID<T>(Guid id) => new(id);
-    public static ID<T> Empty => new(Guid.Empty);
+    public static explicit operator Id<T>(Guid id) => new(id);
+    public static Id<T> Empty => new(Guid.Empty);
 }

@@ -2,29 +2,29 @@
 
 namespace PizzaSystem.Persistence;
 
-public class Repository<T> : IRepository<T> where T : IEntity<T>
+internal class Repository<T> : IRepository<T> where T : IEntity<T>
 {
-    private readonly Dictionary<ID<T>, T> _memoryEntities = new();
+    private readonly Dictionary<Id<T>, T> _memoryEntities = new();
     
-    public ID<T> Add(T entity)
+    public Id<T> Add(T entity)
     {
         _memoryEntities.Add(entity.Id, entity);
         return entity.Id;
     }
 
-    public ID<T> Update(T entity)
+    public Id<T> Update(T entity)
     {
         _memoryEntities[entity.Id] = entity;
         return entity.Id;
     }
 
-    public ID<T> Delete(T entity)
+    public Id<T> Delete(Id<T> id)
     {
-        _memoryEntities.Remove(entity.Id);
-        return entity.Id;
+        _memoryEntities.Remove(id);
+        return id;
     }
 
-    public T? Get(ID<T> id)
+    public T? Get(Id<T> id)
     {
         return _memoryEntities.Values.FirstOrDefault(x => x.Id == id);
     }
@@ -32,10 +32,5 @@ public class Repository<T> : IRepository<T> where T : IEntity<T>
     public IEnumerable<T> GetAll()
     {
         return _memoryEntities.Values;
-    }
-
-    public IEnumerable<T> GetAllById(ID<T> id)
-    {
-        return _memoryEntities.Values.Where(x => x.Id == id);
     }
 }
