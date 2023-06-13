@@ -1,36 +1,68 @@
-﻿using PizzaSystem.Core.Interfaces;
+﻿using Dapper;
+using PizzaSystem.Core.Interfaces;
+using PizzaSystem.Persistence.DataStorage.Databases;
 
 namespace PizzaSystem.Persistence;
 
-internal class Repository<T> : IRepository<T> where T : IEntity<T>
+public class Repository<T> : IRepository<T> where T : IEntity<T>
 {
-    private readonly Dictionary<Id<T>, T> _memoryEntities = new();
-    
-    public Id<T> Add(T entity)
+    private readonly string _tableName;
+    private readonly IDatabase<SqLite> _database;
+
+    public Repository(string tableName, IDatabase<SqLite> database)
     {
-        _memoryEntities.Add(entity.Id, entity);
+        _tableName = tableName;
+        _database = database;
+    }
+
+    public async Task<Id<T>> Add(T entity)
+    {    
+        using var connection = _database.CreateConnection();
+        
+        var properties      = typeof(T).GetProperties();
+        var columnNames     = properties.Select(property => property.Name);
+        var parameterNames  = properties.Select(property => $"@{property.Name}");
+        var parameterValues = properties.ToDictionary(property => property.Name, property => property.GetValue(entity));
+        
+        var sql = $"INSERT INTO {_tableName} ({string.Join(", ", columnNames)}) VALUES ({string.Join(", ", parameterNames)})";
+
+        await connection.ExecuteAsync(sql, parameterValues);
         return entity.Id;
     }
 
-    public Id<T> Update(T entity)
+    public async Task<Id<T>> Update(T entity)
     {
-        _memoryEntities[entity.Id] = entity;
+        using var connection = _database.CreateConnection();
+
+        var properties      = typeof(T).GetProperties();
+        var columnNames     = properties.Select(property => property.Name);
+        var parameterValues = properties.ToDictionary(property => property.Name, property => property.GetValue(entity));
+
+        var sql = $"UPDATE {_tableName} SET {string.Join(", ", columnNames.Select(column => $"{column} = @{column}"))} WHERE Id = @Id";
+
+        await connection.ExecuteAsync(sql, parameterValues);
         return entity.Id;
     }
 
-    public Id<T> Delete(Id<T> id)
+    public async Task<Id<T>> Delete(Id<T> id)
     {
-        _memoryEntities.Remove(id);
+        using var connection = _database.CreateConnection();
+        var       sql        = $"DELETE FROM {_tableName} WHERE Id = @Id";
+        await connection.ExecuteAsync(sql, new {Id = id});
         return id;
     }
 
-    public T? Get(Id<T> id)
+    public async Task<T?> Get(Id<T> id)
     {
-        return _memoryEntities.Values.FirstOrDefault(x => x.Id == id);
+        using var connection = _database.CreateConnection();
+        var       sql        = $"SELECT * FROM {_tableName} WHERE Id = 1";
+        return await connection.QueryFirstOrDefaultAsync<T>(sql);
     }
     
-    public IEnumerable<T> GetAll()
+    public async Task<IEnumerable<T>> GetAll()
     {
-        return _memoryEntities.Values;
+        using var connection = _database.CreateConnection();
+        var       sql        = $"SELECT * FROM {_tableName}";
+        return await connection.QueryAsync<T>(sql);
     }
 }

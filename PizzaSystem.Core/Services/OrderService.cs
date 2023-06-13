@@ -12,28 +12,24 @@ internal sealed class OrderService : IService<Order>
         _orderRepository = orderRepository;
     }
 
-    public Order? Get(Id<Order> id)
+    public async Task<Order?> Get(Id<Order> id)
+        => await _orderRepository.Get(id);
+    
+    public async Task<Id<Order>> Add(Order entity)
+        => await _orderRepository.Add(entity);
+
+    public async Task<Id<Order>> Update(Order entity)
     {
-        return _orderRepository.Get(id);
+        var order = await _orderRepository.Get(entity.Id);
+        
+        if (order is null) await _orderRepository.Add(entity);
+        
+        return await _orderRepository.Update(entity);
     }
 
-    public Id<Order> Add(Order entity)
-    {
-        return _orderRepository.Add(entity);
-    }
+    public async Task<Id<Order>> Delete(Id<Order> id) 
+        => await _orderRepository.Delete(id);
 
-    public Id<Order> Update(Order entity)
-    {
-        return _orderRepository.Update(entity);
-    }
-
-    public Id<Order> Delete(Id<Order> id)
-    {
-        return _orderRepository.Delete(id);
-    }
-
-    public IEnumerable<Order> GetAll()
-    {
-        return _orderRepository.GetAll();
-    }
+    public async Task<IEnumerable<Order>> GetAll() 
+        => await _orderRepository.GetAll();
 }

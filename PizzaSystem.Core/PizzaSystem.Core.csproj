@@ -11,6 +11,9 @@
       <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
         <HintPath>..\..\..\..\..\usr\local\share\dotnet\shared\Microsoft.AspNetCore.App\7.0.5\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
       </Reference>
+      <Reference Include="System.Data.SQLite">
+        <HintPath>..\..\..\.nuget\packages\stub.system.data.sqlite.core.netstandard\1.0.117\lib\netstandard2.1\System.Data.SQLite.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

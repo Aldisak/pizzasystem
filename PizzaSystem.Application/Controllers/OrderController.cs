@@ -15,28 +15,17 @@ public sealed class OrderController : AbstractController<Order>
     }
 
     [HttpGet("order")]
-    public override IActionResult Get([FromQuery] Guid id)
-    {
-        var order = _orderService.Get((Id<Order>) id);
-        return Ok(order);
-    }
+    public override async Task<IActionResult> Get([FromQuery] Guid id)
+        => Ok(await _orderService.Get((Id<Order>) id));
 
-    [HttpPost("order")]
-    public override IActionResult Update([FromBody] Order order)
-    {
-        _orderService.Update(order);
-        return Ok(order);
-    }
+        [HttpPost("order")]
+    public override async Task<IActionResult> Update([FromBody] Order order)
+        => Ok(await _orderService.Update(order));
 
     [HttpDelete("order")]
-    public override IActionResult Delete([FromQuery] Guid id)
-    {
-        return Ok(_orderService.Delete((Id<Order>) id));
-    }
+    public override async Task<IActionResult> Delete([FromQuery] Guid id) 
+        => Ok(await _orderService.Delete((Id<Order>) id));
 
     [HttpGet("orders")]
-    public override IActionResult GetAll()
-    {
-        return Ok(_orderService.GetAll());
-    }
+    public override async Task<IActionResult> GetAll() => Ok(await _orderService.GetAll());
 }

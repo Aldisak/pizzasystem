@@ -6,8 +6,8 @@ namespace PizzaSystem.Application.Controllers;
 
 public abstract class AbstractController<T> : ControllerBase where T : class
 {
-    public abstract IActionResult Get([FromQuery] Guid id);
-    public abstract IActionResult Update(T entity);
-    public abstract IActionResult Delete([FromQuery] Guid id);
-    public abstract IActionResult GetAll();
+    public abstract Task<IActionResult> Get(Guid id);
+    public abstract Task<IActionResult> Update(T entity);
+    public abstract Task<IActionResult> Delete(Guid id);
+    public abstract Task<IActionResult> GetAll();
 }
