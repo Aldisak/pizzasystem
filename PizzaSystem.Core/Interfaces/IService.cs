@@ -4,9 +4,9 @@ namespace PizzaSystem.Core.Interfaces;
 
 public interface IService<T> where T : IEntity<T>
 {
-    Task<T?> Get(Id<T> id);
-    Task<Id<T>> Add(T entity);
-    Task<Id<T>> Update(T entity);
-    Task<Id<T>> Delete(Id<T> id);
+    Task<T?> Get(int id);
+    Task<int> Add(T entity);
+    Task<int> Update(T entity);
+    Task<int> Delete(int id);
     Task<IEnumerable<T>> GetAll();
 }

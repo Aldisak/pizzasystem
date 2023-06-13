@@ -15,7 +15,7 @@ public sealed class Repository<T> : IRepository<T> where T : IEntity<T>
         _database = database;
     }
 
-    public async Task<Id<T>> Add(T entity)
+    public async Task<int> Add(T entity)
     {    
         using var connection = _database.CreateConnection();
         
@@ -30,7 +30,7 @@ public sealed class Repository<T> : IRepository<T> where T : IEntity<T>
         return entity.Id;
     }
 
-    public async Task<Id<T>> Update(T entity)
+    public async Task<int> Update(T entity)
     {
         using var connection = _database.CreateConnection();
 
@@ -44,7 +44,7 @@ public sealed class Repository<T> : IRepository<T> where T : IEntity<T>
         return entity.Id;
     }
 
-    public async Task<Id<T>> Delete(Id<T> id)
+    public async Task<int> Delete(int id)
     {
         using var connection = _database.CreateConnection();
         var       sql        = $"DELETE FROM {_tableName} WHERE Id = @Id";
@@ -52,7 +52,7 @@ public sealed class Repository<T> : IRepository<T> where T : IEntity<T>
         return id;
     }
 
-    public async Task<T?> Get(Id<T> id)
+    public async Task<T?> Get(int id)
     {
         using var connection = _database.CreateConnection();
         var       sql        = $"SELECT * FROM {_tableName} WHERE Id = @Id";

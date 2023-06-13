@@ -23,7 +23,7 @@ namespace Tests.Application
         public async Task Get_ValidId_ReturnsOkResult()
         {
             // Arrange
-            var orderId = new Guid("dda5943e-ea9d-47f6-87c3-23eac318763a");
+            var orderId = 1;
             var order   = GenerateOrder();
             _orderServiceMock.Setup(service => service.Get(order.Id)).ReturnsAsync(order);
 
@@ -58,7 +58,7 @@ namespace Tests.Application
         public async Task Delete_ValidId_ReturnsOkResult()
         {
             // Arrange
-            var orderId = new Guid("dda5943e-ea9d-47f6-87c3-23eac318763a");
+            var orderId = 1;
             var order   = GenerateOrder();
             _orderServiceMock.Setup(service => service.Delete(order.Id)).ReturnsAsync(order.Id);
 
@@ -93,7 +93,7 @@ namespace Tests.Application
         {
             return new Order
             {
-                Id         = (Id<Order>) new Guid("dda5943e-ea9d-47f6-87c3-23eac318763a"),
+                Id         = 1,
                 OrderItems = new List<OrderItem>(),
                 CustomerContact = new CustomerContact
                 {
