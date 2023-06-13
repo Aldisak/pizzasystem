@@ -4,7 +4,7 @@ namespace PizzaSystem.Core.Models;
 
 public sealed record MenuItem : IEntity<MenuItem>
 {
-    public required ID<MenuItem> Id { get; init; }
+    public required Id<MenuItem> Id { get; init; }
     public required string Title { get; init; }
     public string? Description { get; init; }
     public required List<Ingredient> Ingredients { get; init; }
