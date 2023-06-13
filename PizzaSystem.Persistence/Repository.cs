@@ -4,7 +4,7 @@ using PizzaSystem.Persistence.DataStorage.Databases;
 
 namespace PizzaSystem.Persistence;
 
-public class Repository<T> : IRepository<T> where T : IEntity<T>
+public sealed class Repository<T> : IRepository<T> where T : IEntity<T>
 {
     private readonly string _tableName;
     private readonly IDatabase<SqLite> _database;
@@ -55,7 +55,7 @@ public class Repository<T> : IRepository<T> where T : IEntity<T>
     public async Task<T?> Get(Id<T> id)
     {
         using var connection = _database.CreateConnection();
-        var       sql        = $"SELECT * FROM {_tableName} WHERE Id = 1";
+        var       sql        = $"SELECT * FROM {_tableName} WHERE Id = @Id";
         return await connection.QueryFirstOrDefaultAsync<T>(sql);
     }
     
