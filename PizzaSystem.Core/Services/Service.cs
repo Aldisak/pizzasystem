@@ -18,14 +18,8 @@ internal sealed class Service<T> : IService<T> where T : IEntity<T>
     public Task<T> Add(T entity)
         => _repository.Add(entity);
 
-    public async Task<T> Update(T entity)
-    {
-        var result = await _repository.Get(entity.Id);
-        
-        if (result is null) await _repository.Add(entity);
-        
-        return await _repository.Update(entity);
-    }
+    public Task<T> Update(T entity) 
+        => _repository.Update(entity);
 
     public Task<T> Delete(int id) 
         => _repository.Delete(id);
