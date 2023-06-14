@@ -15,18 +15,18 @@ public sealed class AlergenController : AbstractController<Alergen>
     }
 
     [HttpGet("alergen")]
-    public override async Task<IActionResult> Get([FromQuery] int id)
-        => Ok(await _alergenService.Get(id));
+    public override Task<IActionResult> Get([FromQuery] int id)
+        => Task.FromResult<IActionResult>(Ok(_alergenService.Get(id)));
 
         [HttpPost("alergen")]
-    public override async Task<IActionResult> Update([FromBody] Alergen alergen)
-        => Ok(await _alergenService.Update(alergen));
+    public override Task<IActionResult> Update([FromBody] Alergen alergen)
+        => Task.FromResult<IActionResult>(Ok(_alergenService.Update(alergen)));
 
     [HttpDelete("alergen")]
-    public override async Task<IActionResult> Delete([FromQuery] int id) 
-        => Ok(await _alergenService.Delete(id));
+    public override Task<IActionResult> Delete([FromQuery] int id) 
+        => Task.FromResult<IActionResult>(Ok(_alergenService.Delete(id)));
 
     [HttpGet("alergens")]
-    public override async Task<IActionResult> GetAll() 
-        => Ok(await _alergenService.GetAll());
+    public override Task<IActionResult> GetAll() 
+        => Task.FromResult<IActionResult>(Ok(_alergenService.GetAll()));
 }

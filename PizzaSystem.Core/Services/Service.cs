@@ -12,11 +12,11 @@ internal sealed class Service<T> : IService<T> where T : IEntity<T>
         _repository = repository;
     }
 
-    public async Task<T?> Get(int id)
-        => await _repository.Get(id);
+    public Task<T?> Get(int id)
+        => _repository.Get(id);
     
-    public async Task<int> Add(T entity)
-        => await _repository.Add(entity);
+    public Task<int> Add(T entity)
+        => _repository.Add(entity);
 
     public async Task<int> Update(T entity)
     {
@@ -27,9 +27,9 @@ internal sealed class Service<T> : IService<T> where T : IEntity<T>
         return await _repository.Update(entity);
     }
 
-    public async Task<int> Delete(int id) 
-        => await _repository.Delete(id);
+    public Task<int> Delete(int id) 
+        => _repository.Delete(id);
 
-    public async Task<IEnumerable<T>> GetAll() 
-        => await _repository.GetAll();
+    public Task<IEnumerable<T>> GetAll() 
+        => _repository.GetAll();
 }

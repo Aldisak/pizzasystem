@@ -15,18 +15,18 @@ public sealed class MenuItemController : AbstractController<MenuItem>
     }
 
     [HttpGet("menu-item")]
-    public override async Task<IActionResult> Get([FromQuery] int id)
-        => Ok(await _menuItemService.Get(id));
+    public override Task<IActionResult> Get([FromQuery] int id)
+        => Task.FromResult<IActionResult>(Ok(_menuItemService.Get(id)));
 
         [HttpPost("menu-item")]
-    public override async Task<IActionResult> Update([FromBody] MenuItem menuItem)
-        => Ok(await _menuItemService.Update(menuItem));
+    public override Task<IActionResult> Update([FromBody] MenuItem menuItem)
+        => Task.FromResult<IActionResult>(Ok(_menuItemService.Update(menuItem)));
 
     [HttpDelete("menu-item")]
-    public override async Task<IActionResult> Delete([FromQuery] int id) 
-        => Ok(await _menuItemService.Delete(id));
+    public override Task<IActionResult> Delete([FromQuery] int id) 
+        => Task.FromResult<IActionResult>(Ok(_menuItemService.Delete(id)));
 
     [HttpGet("menu-items")]
-    public override async Task<IActionResult> GetAll() 
-        => Ok(await _menuItemService.GetAll());
+    public override Task<IActionResult> GetAll() 
+        => Task.FromResult<IActionResult>(Ok(_menuItemService.GetAll()));
 }

@@ -15,18 +15,18 @@ public sealed class IngredientController : AbstractController<Ingredient>
     }
 
     [HttpGet("ingredient")]
-    public override async Task<IActionResult> Get([FromQuery] int id)
-        => Ok(await _ingredientService.Get(id));
+    public override Task<IActionResult> Get([FromQuery] int id)
+        => Task.FromResult<IActionResult>(Ok(_ingredientService.Get(id)));
 
         [HttpPost("ingredient")]
-    public override async Task<IActionResult> Update([FromBody] Ingredient ingredient)
-        => Ok(await _ingredientService.Update(ingredient));
+    public override Task<IActionResult> Update([FromBody] Ingredient ingredient)
+        => Task.FromResult<IActionResult>(Ok(_ingredientService.Update(ingredient)));
 
     [HttpDelete("ingredient")]
-    public override async Task<IActionResult> Delete([FromQuery] int id) 
-        => Ok(await _ingredientService.Delete(id));
+    public override Task<IActionResult> Delete([FromQuery] int id) 
+        => Task.FromResult<IActionResult>(Ok(_ingredientService.Delete(id)));
 
     [HttpGet("ingredients")]
-    public override async Task<IActionResult> GetAll() 
-        => Ok(await _ingredientService.GetAll());
+    public override Task<IActionResult> GetAll() 
+        => Task.FromResult<IActionResult>(Ok(_ingredientService.GetAll()));
 }

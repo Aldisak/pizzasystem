@@ -52,17 +52,17 @@ public sealed class Repository<T> : IRepository<T> where T : IEntity<T>
         return id;
     }
 
-    public async Task<T?> Get(int id)
+    public Task<T> Get(int id)
     {
         using var connection = _database.CreateConnection();
         var       sql        = $"SELECT * FROM {_tableName} WHERE Id = @Id";
-        return await connection.QueryFirstOrDefaultAsync<T>(sql);
+        return connection.QueryFirstOrDefaultAsync<T>(sql);
     }
     
-    public async Task<IEnumerable<T>> GetAll()
+    public Task<IEnumerable<T>> GetAll()
     {
         using var connection = _database.CreateConnection();
         var       sql        = $"SELECT * FROM {_tableName}";
-        return await connection.QueryAsync<T>(sql);
+        return connection.QueryAsync<T>(sql);
     }
 }
