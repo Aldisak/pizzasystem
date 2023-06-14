@@ -5,28 +5,32 @@ using PizzaSystem.Core.Models;
 namespace PizzaSystem.Application.Controllers;
 
 [ApiController]
-public sealed class MenuItemController : AbstractController<MenuItem>
+[Route("menu-items")]
+public sealed class MenuItemController : AbstractApiController<MenuItem>
 {
     private readonly IService<MenuItem> _menuItemService;
-    
+
     public MenuItemController(IService<MenuItem> menuItemService)
     {
         _menuItemService = menuItemService;
     }
 
-    [HttpGet("menu-item")]
-    public override Task<IActionResult> Get([FromQuery] int id)
-        => Task.FromResult<IActionResult>(Ok(_menuItemService.Get(id)));
+    [HttpGet("{id:int}")]
+    public override Task<MenuItem?> Get([FromRoute] int id) => _menuItemService.Get(id);
 
-        [HttpPost("menu-item")]
-    public override Task<IActionResult> Update([FromBody] MenuItem menuItem)
-        => Task.FromResult<IActionResult>(Ok(_menuItemService.Update(menuItem)));
+    [HttpPost("{id:int}")]
+    public override Task<CreatedAtActionResult> Add([FromRoute] int id, [FromBody] MenuItem menuItem) =>
+        _menuItemService
+            .Add(menuItem)
+            .ContinueWith(newItem => CreatedAtAction(nameof(Get), new {id = newItem.Result.Id}, newItem.Result));
 
-    [HttpDelete("menu-item")]
-    public override Task<IActionResult> Delete([FromQuery] int id) 
-        => Task.FromResult<IActionResult>(Ok(_menuItemService.Delete(id)));
+    [HttpPut("{id:int}")]
+    public override Task<MenuItem> Update([FromRoute] int id, [FromBody] MenuItem menuItem) =>
+        _menuItemService.Update(menuItem);
 
-    [HttpGet("menu-items")]
-    public override Task<IActionResult> GetAll() 
-        => Task.FromResult<IActionResult>(Ok(_menuItemService.GetAll()));
+    [HttpDelete("{id:int}")]
+    public override Task<MenuItem> Delete([FromRoute] int id) => _menuItemService.Delete(id);
+
+    [HttpGet]
+    public override Task<IEnumerable<MenuItem>> GetAll() => _menuItemService.GetAll();
 }

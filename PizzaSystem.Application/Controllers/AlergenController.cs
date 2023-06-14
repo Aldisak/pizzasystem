@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using PizzaSystem.Core.Interfaces;
 using PizzaSystem.Core.Models;
@@ -5,28 +6,33 @@ using PizzaSystem.Core.Models;
 namespace PizzaSystem.Application.Controllers;
 
 [ApiController]
-public sealed class AlergenController : AbstractController<Alergen>
+[Route("alergens")]
+public sealed class AlergenController : AbstractApiController<Alergen>
 {
     private readonly IService<Alergen> _alergenService;
-    
+
     public AlergenController(IService<Alergen> alergenService)
     {
         _alergenService = alergenService;
     }
 
-    [HttpGet("alergen")]
-    public override Task<IActionResult> Get([FromQuery] int id)
-        => Task.FromResult<IActionResult>(Ok(_alergenService.Get(id)));
+    [HttpGet("{id:int}")]
+    public override Task<Alergen?> Get([FromRoute] int id) => _alergenService.Get(id);
 
-        [HttpPost("alergen")]
-    public override Task<IActionResult> Update([FromBody] Alergen alergen)
-        => Task.FromResult<IActionResult>(Ok(_alergenService.Update(alergen)));
+    [HttpPost("{id:int}")]
+    public override Task<CreatedAtActionResult> Add([FromRoute] int id, [FromBody] Alergen alergen) 
+        => _alergenService
+                .Add(alergen)
+                .ContinueWith(newItem 
+                        => CreatedAtAction(nameof(Get), new {id = newItem.Result.Id}, newItem.Result));
 
-    [HttpDelete("alergen")]
-    public override Task<IActionResult> Delete([FromQuery] int id) 
-        => Task.FromResult<IActionResult>(Ok(_alergenService.Delete(id)));
 
-    [HttpGet("alergens")]
-    public override Task<IActionResult> GetAll() 
-        => Task.FromResult<IActionResult>(Ok(_alergenService.GetAll()));
+    [HttpPut("{id:int}")]
+    public override Task<Alergen> Update([FromRoute] int id, [FromBody] Alergen alergen) => _alergenService.Update(alergen);
+
+    [HttpDelete("{id:int}")]
+    public override Task<Alergen> Delete([FromRoute] int id) => _alergenService.Delete(id);
+
+    [HttpGet]
+    public override Task<IEnumerable<Alergen>> GetAll() =>  _alergenService.GetAll();
 }

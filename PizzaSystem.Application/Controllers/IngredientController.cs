@@ -5,7 +5,8 @@ using PizzaSystem.Core.Models;
 namespace PizzaSystem.Application.Controllers;
 
 [ApiController]
-public sealed class IngredientController : AbstractController<Ingredient>
+[Route("ingredients")]
+public sealed class IngredientController : AbstractApiController<Ingredient>
 {
     private readonly IService<Ingredient> _ingredientService;
     
@@ -14,19 +15,23 @@ public sealed class IngredientController : AbstractController<Ingredient>
         _ingredientService = ingredientService;
     }
 
-    [HttpGet("ingredient")]
-    public override Task<IActionResult> Get([FromQuery] int id)
-        => Task.FromResult<IActionResult>(Ok(_ingredientService.Get(id)));
+    [HttpGet("{id:int}")]
+    public override Task<Ingredient?> Get([FromRoute] int id)
+        => _ingredientService.Get(id);
 
-        [HttpPost("ingredient")]
-    public override Task<IActionResult> Update([FromBody] Ingredient ingredient)
-        => Task.FromResult<IActionResult>(Ok(_ingredientService.Update(ingredient)));
+    [HttpPost("{id:int}")]
+    public override Task<CreatedAtActionResult> Add([FromRoute] int id, [FromBody] Ingredient ingredient)
+        => _ingredientService.Add(ingredient).ContinueWith(newItem 
+                => CreatedAtAction(nameof(Get), new {id = newItem.Result.Id}, newItem.Result));
+    
+    [HttpPut("{id:int}")]
+    public override Task<Ingredient> Update([FromRoute] int id, [FromBody] Ingredient ingredient)
+        => _ingredientService.Update(ingredient);
 
-    [HttpDelete("ingredient")]
-    public override Task<IActionResult> Delete([FromQuery] int id) 
-        => Task.FromResult<IActionResult>(Ok(_ingredientService.Delete(id)));
+    [HttpDelete("{id:int}")]
+    public override Task<Ingredient> Delete([FromRoute] int id) 
+        => _ingredientService.Delete(id);
 
-    [HttpGet("ingredients")]
-    public override Task<IActionResult> GetAll() 
-        => Task.FromResult<IActionResult>(Ok(_ingredientService.GetAll()));
+    [HttpGet]
+    public override Task<IEnumerable<Ingredient>> GetAll() => _ingredientService.GetAll();
 }

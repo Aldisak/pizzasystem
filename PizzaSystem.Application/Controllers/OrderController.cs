@@ -5,7 +5,8 @@ using PizzaSystem.Core.Models;
 namespace PizzaSystem.Application.Controllers;
 
 [ApiController]
-public sealed class OrderController : AbstractController<Order>
+[Route("orders")]
+public sealed class OrderController : AbstractApiController<Order>
 {
     private readonly IService<Order> _orderService;
     
@@ -14,19 +15,26 @@ public sealed class OrderController : AbstractController<Order>
         _orderService = orderService;
     }
 
-    [HttpGet("order")]
-    public override Task<IActionResult> Get([FromQuery] int id)
-        => Task.FromResult<IActionResult>(Ok(_orderService.Get(id)));
+    [HttpGet("{id:int}")]
+    public override Task<Order?> Get([FromRoute] int id)
+        => _orderService.Get(id);
 
-        [HttpPost("order")]
-    public override Task<IActionResult> Update([FromBody] Order order)
-        => Task.FromResult<IActionResult>(Ok(_orderService.Update(order)));
+    [HttpPost("{id:int}")]
+    public override Task<CreatedAtActionResult> Add([FromRoute] int id, [FromBody] Order order)
+        => _orderService
+                .Add(order)
+                .ContinueWith(newItem 
+                        => CreatedAtAction(nameof(Get), new {id = newItem.Result.Id}, newItem.Result));
 
-    [HttpDelete("order")]
-    public override Task<IActionResult> Delete([FromQuery] int id) 
-        => Task.FromResult<IActionResult>(Ok(_orderService.Delete(id)));
+    [HttpPost("{id:int}")]
+    public override Task<Order> Update([FromRoute] int id, [FromBody] Order order)
+        => _orderService.Update(order);
+
+    [HttpDelete("{id:int}")]
+    public override Task<Order> Delete([FromRoute] int id) 
+        => _orderService.Delete(id);
 
     [HttpGet("orders")]
-    public override Task<IActionResult> GetAll() 
-        => Task.FromResult<IActionResult>(Ok(_orderService.GetAll()));
+    public override Task<IEnumerable<Order>> GetAll() 
+        => _orderService.GetAll();
 }

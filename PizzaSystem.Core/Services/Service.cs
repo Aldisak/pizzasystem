@@ -15,10 +15,10 @@ internal sealed class Service<T> : IService<T> where T : IEntity<T>
     public Task<T?> Get(int id)
         => _repository.Get(id);
     
-    public Task<int> Add(T entity)
+    public Task<T> Add(T entity)
         => _repository.Add(entity);
 
-    public async Task<int> Update(T entity)
+    public async Task<T> Update(T entity)
     {
         var result = await _repository.Get(entity.Id);
         
@@ -27,7 +27,7 @@ internal sealed class Service<T> : IService<T> where T : IEntity<T>
         return await _repository.Update(entity);
     }
 
-    public Task<int> Delete(int id) 
+    public Task<T> Delete(int id) 
         => _repository.Delete(id);
 
     public Task<IEnumerable<T>> GetAll() 

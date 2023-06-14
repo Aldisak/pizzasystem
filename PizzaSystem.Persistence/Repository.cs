@@ -15,7 +15,7 @@ public sealed class Repository<T> : IRepository<T> where T : IEntity<T>
         _database = database;
     }
 
-    public async Task<int> Add(T entity)
+    public async Task<T> Add(T entity)
     {    
         using var connection = _database.CreateConnection();
         
@@ -27,10 +27,10 @@ public sealed class Repository<T> : IRepository<T> where T : IEntity<T>
         var sql = $"INSERT INTO {_tableName} ({string.Join(", ", columnNames)}) VALUES ({string.Join(", ", parameterNames)})";
 
         await connection.ExecuteAsync(sql, parameterValues);
-        return entity.Id;
+        return entity;
     }
 
-    public async Task<int> Update(T entity)
+    public async Task<T> Update(T entity)
     {
         using var connection = _database.CreateConnection();
 
@@ -41,22 +41,24 @@ public sealed class Repository<T> : IRepository<T> where T : IEntity<T>
         var sql = $"UPDATE {_tableName} SET {string.Join(", ", columnNames.Select(column => $"{column} = @{column}"))} WHERE Id = @Id";
 
         await connection.ExecuteAsync(sql, parameterValues);
-        return entity.Id;
+        return entity;
     }
 
-    public async Task<int> Delete(int id)
+    public async Task<T> Delete(int id)
     {
         using var connection = _database.CreateConnection();
         var       sql        = $"DELETE FROM {_tableName} WHERE Id = @Id";
-        await connection.ExecuteAsync(sql, new {Id = id});
-        return id;
+        var entity = await Get(id);
+        // TODO: return Result if entity is null (not found)
+        if (entity is not null) await connection.ExecuteAsync(sql, new {Id = id});
+        return entity!;
     }
 
-    public Task<T> Get(int id)
+    public Task<T?> Get(int id)
     {
         using var connection = _database.CreateConnection();
         var       sql        = $"SELECT * FROM {_tableName} WHERE Id = @Id";
-        return connection.QueryFirstOrDefaultAsync<T>(sql);
+        return connection.QueryFirstOrDefaultAsync<T?>(sql, new {Id = id});
     }
     
     public Task<IEnumerable<T>> GetAll()
