@@ -26,7 +26,7 @@ public sealed class OrderController : AbstractApiController<Order>
                 .ContinueWith(newItem 
                         => CreatedAtAction(nameof(Get), new {id = newItem.Result.Id}, newItem.Result));
 
-    [HttpPost("{id:int}")]
+    [HttpPut("{id:int}")]
     public override Task<Order> Update([FromRoute] int id, [FromBody] Order order)
         => _orderService.Update(order);
 
