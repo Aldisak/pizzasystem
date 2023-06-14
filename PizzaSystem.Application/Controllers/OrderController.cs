@@ -34,7 +34,7 @@ public sealed class OrderController : AbstractApiController<Order>
     public override Task<Order> Delete([FromRoute] int id) 
         => _orderService.Delete(id);
 
-    [HttpGet("orders")]
+    [HttpGet]
     public override Task<IEnumerable<Order>> GetAll() 
         => _orderService.GetAll();
 }
