@@ -15,7 +15,7 @@ public sealed class Repository<T> : IRepository<T> where T : IEntity<T>
         _database = database;
     }
 
-    public async Task<Id<T>> Add(T entity)
+    public async Task<T> Add(T entity)
     {    
         using var connection = _database.CreateConnection();
         
@@ -27,10 +27,10 @@ public sealed class Repository<T> : IRepository<T> where T : IEntity<T>
         var sql = $"INSERT INTO {_tableName} ({string.Join(", ", columnNames)}) VALUES ({string.Join(", ", parameterNames)})";
 
         await connection.ExecuteAsync(sql, parameterValues);
-        return entity.Id;
+        return entity;
     }
 
-    public async Task<Id<T>> Update(T entity)
+    public async Task<T> Update(T entity)
     {
         using var connection = _database.CreateConnection();
 
@@ -41,28 +41,30 @@ public sealed class Repository<T> : IRepository<T> where T : IEntity<T>
         var sql = $"UPDATE {_tableName} SET {string.Join(", ", columnNames.Select(column => $"{column} = @{column}"))} WHERE Id = @Id";
 
         await connection.ExecuteAsync(sql, parameterValues);
-        return entity.Id;
+        return entity;
     }
 
-    public async Task<Id<T>> Delete(Id<T> id)
+    public async Task<T> Delete(int id)
     {
         using var connection = _database.CreateConnection();
         var       sql        = $"DELETE FROM {_tableName} WHERE Id = @Id";
-        await connection.ExecuteAsync(sql, new {Id = id});
-        return id;
+        var entity = await Get(id);
+        // TODO: return Result if entity is null (not found)
+        if (entity is not null) await connection.ExecuteAsync(sql, new {Id = id});
+        return entity!;
     }
 
-    public async Task<T?> Get(Id<T> id)
+    public Task<T?> Get(int id)
     {
         using var connection = _database.CreateConnection();
         var       sql        = $"SELECT * FROM {_tableName} WHERE Id = @Id";
-        return await connection.QueryFirstOrDefaultAsync<T>(sql);
+        return connection.QueryFirstOrDefaultAsync<T?>(sql, new {Id = id});
     }
     
-    public async Task<IEnumerable<T>> GetAll()
+    public Task<IEnumerable<T>> GetAll()
     {
         using var connection = _database.CreateConnection();
         var       sql        = $"SELECT * FROM {_tableName}";
-        return await connection.QueryAsync<T>(sql);
+        return connection.QueryAsync<T>(sql);
     }
 }

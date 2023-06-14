@@ -12,6 +12,12 @@ public static class Extensions
     {
         services.AddSingleton<IRepository<Order>, Repository<Order>>(
             x => new Repository<Order>("Orders", x.GetService<SqLite>()!));
+        services.AddSingleton<IRepository<Alergen>, Repository<Alergen>>(
+            x => new Repository<Alergen>("Alergen", x.GetService<SqLite>()!));
+        services.AddSingleton<IRepository<Ingredient>, Repository<Ingredient>>(
+            x => new Repository<Ingredient>("Ingredient", x.GetService<SqLite>()!));
+        services.AddSingleton<IRepository<MenuItem>, Repository<MenuItem>>(
+            x => new Repository<MenuItem>("MenuItem", x.GetService<SqLite>()!));
         return services;
     }
 }
