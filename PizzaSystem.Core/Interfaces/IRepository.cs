@@ -2,9 +2,9 @@ namespace PizzaSystem.Core.Interfaces;
 
 public interface IRepository<T>
 {
-    Task<T> Add(T entity);
-    Task<T> Update(T entity);
-    Task<T> Delete(int id);
-    Task<T?> Get(int id);
-    Task<IEnumerable<T>> GetAll();
+    Task<int> Add(T entity, CancellationToken cancellationToken);
+    Task<T> Update(T entity, CancellationToken cancellationToken);
+    Task<T> Delete(int id, CancellationToken cancellationToken);
+    Task<T?> Get(int id, CancellationToken cancellationToken);
+    Task<IEnumerable<T>> GetAll(CancellationToken cancellationToken);
 }

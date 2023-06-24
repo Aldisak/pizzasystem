@@ -1,11 +1,11 @@
-INSERT INTO Alergen (Title, Description) VALUES ('Milk', 'Milk');
-INSERT INTO Alergen (Title, Description) VALUES ('Eggs', 'Eggs');
-INSERT INTO Alergen (Title, Description) VALUES ('Fish', 'Fish');
-INSERT INTO Alergen (Title, Description) VALUES ('Peanuts', 'Peanuts');
-INSERT INTO Alergen (Title, Description) VALUES ('Soy', 'Soy');
-INSERT INTO Alergen (Title, Description) VALUES ('Wheat', 'Wheat');
-INSERT INTO Alergen (Title, Description) VALUES ('Tree Nuts', 'Tree Nuts');
-INSERT INTO Alergen (Title, Description) VALUES ('Shellfish', 'Shellfish');
+INSERT INTO Alergen ([Order], Title, Description) VALUES (1, 'Milk', 'Milk');
+INSERT INTO Alergen ([Order], Title, Description) VALUES (2, 'Eggs', 'Eggs');
+INSERT INTO Alergen ([Order], Title, Description) VALUES (3, 'Fish', 'Fish');
+INSERT INTO Alergen ([Order], Title, Description) VALUES (4, 'Peanuts', 'Peanuts');
+INSERT INTO Alergen ([Order], Title, Description) VALUES (5, 'Soy', 'Soy');
+INSERT INTO Alergen ([Order], Title, Description) VALUES (6, 'Wheat', 'Wheat');
+INSERT INTO Alergen ([Order], Title, Description) VALUES (7, 'Tree Nuts', 'Tree Nuts');
+INSERT INTO Alergen ([Order], Title, Description) VALUES (8, 'Shellfish', 'Shellfish');
 
 INSERT INTO Ingredient (Title, Description, Category) VALUES ('Onion', 'Onion', 'Vegetable');
 INSERT INTO Ingredient (Title, Description, Category) VALUES ('Garlic', 'Garlic', 'Vegetable');

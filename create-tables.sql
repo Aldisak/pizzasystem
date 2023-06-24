@@ -31,7 +31,8 @@ CREATE TABLE IF NOT EXISTS
     Alergen
 (
     Id          INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    Title       TEXT    NOT NULL,
+    "Order"     INTEGER NOT NULL UNIQUE,
+    Title       TEXT    NOT NULL UNIQUE,
     Description TEXT
 );
 CREATE TABLE IF NOT EXISTS

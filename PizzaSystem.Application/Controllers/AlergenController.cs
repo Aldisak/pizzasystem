@@ -1,7 +1,11 @@
-using Microsoft.AspNetCore.Http.HttpResults;
+using Mapster;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using PizzaSystem.Core.Interfaces;
+using PizzaSystem.Application.Requests;
+using PizzaSystem.Core.Commands;
+using PizzaSystem.Core.Exceptions;
 using PizzaSystem.Core.Models;
+using PizzaSystem.Core.Services;
 
 namespace PizzaSystem.Application.Controllers;
 
@@ -9,30 +13,53 @@ namespace PizzaSystem.Application.Controllers;
 [Route("alergens")]
 public sealed class AlergenController : AbstractApiController<Alergen>
 {
-    private readonly IService<Alergen> _alergenService;
-
-    public AlergenController(IService<Alergen> alergenService)
+    public AlergenController(IMediator mediator) : base(mediator)
     {
-        _alergenService = alergenService;
     }
 
     [HttpGet("{id:int}")]
-    public override Task<Alergen?> Get([FromRoute] int id) => _alergenService.Get(id);
+    public async Task<IActionResult> Get([FromRoute] int id, CancellationToken cancellationToken = default) {
+        try
+        {
+             var query = await Mediator.Send(new GetAlergenQuery(id), cancellationToken);
+             return Ok(query);
+        }
+        catch (EntityDoesNotExistException exception) { return NotFound(exception.Message); }
+    }
 
-    [HttpPost("{id:int}")]
-    public override Task<CreatedAtActionResult> Add([FromRoute] int id, [FromBody] Alergen alergen) 
-        => _alergenService
-                .Add(alergen)
-                .ContinueWith(newItem 
-                        => CreatedAtAction(nameof(Get), new {id = newItem.Result.Id}, newItem.Result));
-
+    [HttpPost]
+    public Task<CreatedAtActionResult> Add([FromBody] CreateAlergenRequest request)
+        => Mediator.Send(request.Adapt<CreateAlergenCommand>())
+                   .ContinueWith(x => CreatedAtAction(nameof(Get), new {id = x.Id}, null));
 
     [HttpPut("{id:int}")]
-    public override Task<Alergen> Update([FromRoute] int id, [FromBody] Alergen alergen) => _alergenService.Update(alergen);
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateAlergenRequest request, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var command = request.Adapt<UpdateAlergenCommand>() with { Id = id };
+            var result = await Mediator.Send(command, cancellationToken);
+            return Ok(result);
+        }
+        catch (EntityDoesNotExistException exception) { return NotFound(exception.Message); }
+    }
 
     [HttpDelete("{id:int}")]
-    public override Task<Alergen> Delete([FromRoute] int id) => _alergenService.Delete(id);
-
+    public async Task<IActionResult> Delete([FromRoute] int id, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var command = new DeleteAlergenCommand(id);
+            var result  = await Mediator.Send(command, cancellationToken);
+            return Ok(result);
+        }
+        catch (EntityDoesNotExistException exception) { return NotFound(exception.Message); }
+    }
+    
     [HttpGet]
-    public override Task<IEnumerable<Alergen>> GetAll() =>  _alergenService.GetAll();
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken = default)
+    {
+        var query = await Mediator.Send(new GetAlergensQuery(), cancellationToken);
+        return Ok(query);
+    }
 }
