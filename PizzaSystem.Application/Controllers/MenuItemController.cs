@@ -17,7 +17,7 @@ public sealed class MenuItemController : AbstractApiController<MenuItem>
     }
 
     [HttpGet("{id:int}")]
-    public Task<MenuItem?> Get([FromRoute] int id) => _menuItemService.Get(id);
+    public Task<MenuItem> Get([FromRoute] int id) => _menuItemService.Get(id);
 
     [HttpPost("{id:int}")]
     public Task<CreatedAtActionResult> Add([FromRoute] int id, [FromBody] MenuItem menuItem) =>

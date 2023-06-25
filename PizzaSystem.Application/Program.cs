@@ -13,7 +13,7 @@ builder.Services.AddControllers().ConfigureApiBehaviorOptions(options => options
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.Load("PizzaSystem.Core")));
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.Load("PizzaSystem.Core")));
 
 builder.Services.AddCoreServices();
 builder.Services.AddPersistenceServices();

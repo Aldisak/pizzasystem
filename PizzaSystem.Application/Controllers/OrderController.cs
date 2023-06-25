@@ -17,7 +17,7 @@ public sealed class OrderController : AbstractApiController<Order>
     }
 
     [HttpGet("{id:int}")]
-    public Task<Order?> Get([FromRoute] int id)
+    public Task<Order> Get([FromRoute] int id)
         => _orderService.Get(id);
 
     [HttpPost("{id:int}")]

@@ -3,7 +3,7 @@ using PizzaSystem.Core.Exceptions;
 using PizzaSystem.Core.Interfaces;
 using PizzaSystem.Core.Models;
 
-namespace PizzaSystem.Core.Services;
+namespace PizzaSystem.Core.Queries;
 
 public sealed record GetAlergenQuery(int Id) : IRequest<Alergen>;
 

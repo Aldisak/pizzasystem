@@ -1,9 +1,8 @@
 using MediatR;
-using PizzaSystem.Core.Exceptions;
 using PizzaSystem.Core.Interfaces;
 using PizzaSystem.Core.Models;
 
-namespace PizzaSystem.Core.Services;
+namespace PizzaSystem.Core.Queries;
 
 public sealed record GetAlergensQuery : IRequest<IEnumerable<Alergen>>;
 

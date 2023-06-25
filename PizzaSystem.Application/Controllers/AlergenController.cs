@@ -5,7 +5,7 @@ using PizzaSystem.Application.Requests;
 using PizzaSystem.Core.Commands;
 using PizzaSystem.Core.Exceptions;
 using PizzaSystem.Core.Models;
-using PizzaSystem.Core.Services;
+using PizzaSystem.Core.Queries;
 
 namespace PizzaSystem.Application.Controllers;
 
@@ -13,9 +13,7 @@ namespace PizzaSystem.Application.Controllers;
 [Route("alergens")]
 public sealed class AlergenController : AbstractApiController<Alergen>
 {
-    public AlergenController(IMediator mediator) : base(mediator)
-    {
-    }
+    public AlergenController(IMediator mediator) : base(mediator) { }
 
     [HttpGet("{id:int}")]
     public async Task<IActionResult> Get([FromRoute] int id, CancellationToken cancellationToken = default) {
@@ -57,9 +55,6 @@ public sealed class AlergenController : AbstractApiController<Alergen>
     }
     
     [HttpGet]
-    public async Task<IActionResult> GetAll(CancellationToken cancellationToken = default)
-    {
-        var query = await Mediator.Send(new GetAlergensQuery(), cancellationToken);
-        return Ok(query);
-    }
+    public Task<OkObjectResult> GetAll(CancellationToken cancellationToken = default)
+    => Mediator.Send(new GetAlergensQuery(), cancellationToken).ContinueWith(x => Ok(x.Result), cancellationToken);
 }

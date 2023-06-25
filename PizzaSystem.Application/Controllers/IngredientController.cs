@@ -17,7 +17,7 @@ public sealed class IngredientController : AbstractApiController<Ingredient>
     }
 
     [HttpGet("{id:int}")]
-    public Task<Ingredient?> Get([FromRoute] int id)
+    public Task<Ingredient> Get([FromRoute] int id)
         => _ingredientService.Get(id);
 
     [HttpPost("{id:int}")]

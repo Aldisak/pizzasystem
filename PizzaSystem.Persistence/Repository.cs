@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Dapper;
+﻿using Dapper;
 using PizzaSystem.Core.Exceptions;
 using PizzaSystem.Core.Interfaces;
 using PizzaSystem.Persistence.DataStorage.Databases;
@@ -20,9 +19,9 @@ public sealed class Repository<T> : IRepository<T> where T : IEntity<T>
     public async Task<int> Add(T entity, CancellationToken cancellationToken = default)
     {
         using var connection = _database.CreateConnection();
-        var properties     = typeof(T).GetProperties().Where(property => property.Name != "Id");
-        var propertyInfos  = properties.ToList();
-        var columnNames    = string.Join(", ", propertyInfos.Select(property => $"[{property.Name}]").ToList());
+        var properties = typeof(T).GetProperties().Where(property => property.Name != "Id");
+        var propertyInfos = properties.ToList();
+        var columnNames = string.Join(", ", propertyInfos.Select(property => $"[{property.Name}]").ToList());
         var parameterNames = string.Join(", ", propertyInfos.Select(property => $"@{property.Name}").ToList());
         var sql = $"INSERT INTO {_tableName} ({columnNames}) VALUES ({parameterNames}); SELECT last_insert_rowid();";
         var lastInsertedRow = await connection.ExecuteScalarAsync<int>(sql, entity);
