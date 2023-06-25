@@ -15,7 +15,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
 
-MappingConfig.ConfigureMappings();
 builder.Services.AddCoreServices();
 builder.Services.AddPersistenceServices();
 
