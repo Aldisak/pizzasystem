@@ -1,3 +1,4 @@
+using System.Reflection;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using PizzaSystem.Core.Commands;
@@ -13,14 +14,20 @@ public static class Extensions
     {
         services.AddScoped(typeof(IService<>), typeof(Service<>));
         
-        // Register handlers dynamically from the assembly where the handlers are defined
-        // Commands
-        services.AddScoped<IRequestHandler<CreateAlergenCommand, int>, CreateAlergenCommandHandler>();
-        services.AddScoped<IRequestHandler<UpdateAlergenCommand, Alergen>, UpdateAlergenCommandHandler>();
-        services.AddScoped<IRequestHandler<DeleteAlergenCommand, Alergen>, DeleteAlergenCommandHandler>();
-        // Queries
-        services.AddScoped<IRequestHandler<GetAlergenQuery, Alergen>, GetAlergenQueryHandler>();
-        services.AddScoped<IRequestHandler<GetAlergensQuery, IEnumerable<Alergen>>, GetAlergensQueryHandler>();
+        // Register handlers dynamically from the assembly PizzaSystem.Core according to the IRequestHandler<,> interface
+        var assembly = Assembly.GetExecutingAssembly();
+        foreach (var type in assembly.GetTypes())
+        {
+            if (!type.IsClass || type.IsAbstract) continue;
+            var interfaces = type.GetInterfaces();
+            foreach (var @interface in interfaces)
+            {
+                if (@interface.IsGenericType && @interface.GetGenericTypeDefinition() == typeof(IRequestHandler<,>))
+                {
+                    services.AddScoped(@interface, type);
+                }
+            }
+        }
         
         return services;
     }
