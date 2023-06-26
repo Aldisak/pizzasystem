@@ -1,7 +1,5 @@
-using Mapster;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using PizzaSystem.Application.Requests;
 using PizzaSystem.Core.Commands;
 using PizzaSystem.Core.Exceptions;
 using PizzaSystem.Core.Models;
@@ -16,26 +14,26 @@ public sealed class AlergenController : AbstractApiController<Alergen>
     public AlergenController(IMediator mediator) : base(mediator) { }
 
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> Get([FromRoute] int id, CancellationToken cancellationToken = default) {
+    public async Task<IActionResult> Get([FromRoute] GetAlergenQuery request, CancellationToken cancellationToken = default) {
         try
         {
-             var query = await Mediator.Send(new GetAlergenQuery(id), cancellationToken);
+             var query = await Mediator.Send(request, cancellationToken);
              return Ok(query);
         }
         catch (EntityDoesNotExistException exception) { return NotFound(exception.Message); }
     }
 
     [HttpPost]
-    public Task<CreatedAtActionResult> Add([FromBody] CreateAlergenRequest request)
-        => Mediator.Send(request.Adapt<CreateAlergenCommand>())
+    public Task<CreatedAtActionResult> Add([FromBody] CreateAlergenCommand request)
+        => Mediator.Send(request)
                    .ContinueWith(x => CreatedAtAction(nameof(Get), new {id = x.Id}, null));
 
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateAlergenRequest request, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateAlergenCommand request, CancellationToken cancellationToken = default)
     {
         try
         {
-            var command = request.Adapt<UpdateAlergenCommand>() with { Id = id };
+            var command = request with { Id = id };
             var result = await Mediator.Send(command, cancellationToken);
             return Ok(result);
         }
@@ -43,12 +41,11 @@ public sealed class AlergenController : AbstractApiController<Alergen>
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete([FromRoute] int id, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Delete([FromRoute] DeleteAlergenCommand request, CancellationToken cancellationToken = default)
     {
         try
         {
-            var command = new DeleteAlergenCommand(id);
-            var result  = await Mediator.Send(command, cancellationToken);
+            var result  = await Mediator.Send(request, cancellationToken);
             return Ok(result);
         }
         catch (EntityDoesNotExistException exception) { return NotFound(exception.Message); }
