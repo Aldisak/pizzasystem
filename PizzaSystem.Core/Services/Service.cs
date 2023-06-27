@@ -1,8 +1,7 @@
+using PizzaSystem.Core.Exceptions;
 using PizzaSystem.Core.Interfaces;
-using PizzaSystem.Core.Models;
 
 namespace PizzaSystem.Core.Services;
-
 internal sealed class Service<T> : IService<T> where T : IEntity<T>
 {
     private readonly IRepository<T> _repository;
@@ -12,18 +11,23 @@ internal sealed class Service<T> : IService<T> where T : IEntity<T>
         _repository = repository;
     }
 
-    public Task<T?> Get(int id)
-        => _repository.Get(id);
+    public async Task<T> Get(int id, CancellationToken cancellationToken = default)
+    {
+        var entity = await _repository.Get(id, cancellationToken);
+        if (entity == null) 
+            throw new EntityDoesNotExistException($"Requested entity of type {typeof(T).Name} with id {id} does not exist.");
+        return entity;
+    }
     
-    public Task<T> Add(T entity)
-        => _repository.Add(entity);
+    public Task<int> Add(T entity, CancellationToken cancellationToken = default)
+        => _repository.Add(entity, cancellationToken);
 
-    public Task<T> Update(T entity) 
-        => _repository.Update(entity);
+    public Task<T> Update(T entity, CancellationToken cancellationToken = default) 
+        => _repository.Update(entity, cancellationToken);
 
-    public Task<T> Delete(int id) 
-        => _repository.Delete(id);
+    public Task<T> Delete(int id, CancellationToken cancellationToken = default) 
+        => _repository.Delete(id, cancellationToken);
 
-    public Task<IEnumerable<T>> GetAll() 
-        => _repository.GetAll();
+    public Task<IEnumerable<T>> GetAll(CancellationToken cancellationToken = default) 
+        => _repository.GetAll(cancellationToken);
 }

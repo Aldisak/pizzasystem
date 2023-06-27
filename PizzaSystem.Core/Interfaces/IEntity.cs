@@ -1,5 +1,3 @@
-using PizzaSystem.Core.Models;
-
 namespace PizzaSystem.Core.Interfaces;
 
 public interface IEntity<T>

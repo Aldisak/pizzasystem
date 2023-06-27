@@ -1,3 +1,4 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using PizzaSystem.Core.Interfaces;
 using PizzaSystem.Core.Models;
@@ -10,27 +11,27 @@ public sealed class MenuItemController : AbstractApiController<MenuItem>
 {
     private readonly IService<MenuItem> _menuItemService;
 
-    public MenuItemController(IService<MenuItem> menuItemService)
+    public MenuItemController(IService<MenuItem> menuItemService, IMediator mediator) : base(mediator)
     {
         _menuItemService = menuItemService;
     }
 
     [HttpGet("{id:int}")]
-    public override Task<MenuItem?> Get([FromRoute] int id) => _menuItemService.Get(id);
+    public Task<MenuItem> Get([FromRoute] int id) => _menuItemService.Get(id);
 
     [HttpPost("{id:int}")]
-    public override Task<CreatedAtActionResult> Add([FromRoute] int id, [FromBody] MenuItem menuItem) =>
+    public Task<CreatedAtActionResult> Add([FromRoute] int id, [FromBody] MenuItem menuItem) =>
         _menuItemService
             .Add(menuItem)
-            .ContinueWith(newItem => CreatedAtAction(nameof(Get), new {id = newItem.Result.Id}, newItem.Result));
+            .ContinueWith(newItem => CreatedAtAction(nameof(Get), new {id = newItem.Result}, newItem.Result));
 
     [HttpPut("{id:int}")]
-    public override Task<MenuItem> Update([FromRoute] int id, [FromBody] MenuItem menuItem) =>
+    public Task<MenuItem> Update([FromRoute] int id, [FromBody] MenuItem menuItem) =>
         _menuItemService.Update(menuItem);
 
     [HttpDelete("{id:int}")]
-    public override Task<MenuItem> Delete([FromRoute] int id) => _menuItemService.Delete(id);
+    public Task<MenuItem> Delete([FromRoute] int id) => _menuItemService.Delete(id);
 
     [HttpGet]
-    public override Task<IEnumerable<MenuItem>> GetAll() => _menuItemService.GetAll();
+    public Task<IEnumerable<MenuItem>> GetAll() => _menuItemService.GetAll();
 }

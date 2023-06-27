@@ -9,6 +9,7 @@ public static class Extensions
     public static IServiceCollection AddCoreServices(this IServiceCollection services)
     {
         services.AddScoped(typeof(IService<>), typeof(Service<>));
+
         return services;
     }
 }

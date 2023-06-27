@@ -4,8 +4,8 @@ namespace PizzaSystem.Core.Models;
 
 public sealed record Alergen : IEntity<Alergen>
 {
-    public required int Id { get; init; }
-    public required byte Number { get; init; }
+    public int Id { get; init; }
+    public required long Order { get; init; }
     public required string Title { get; init; }
     public required string Description { get; init; }
 }
