@@ -16,6 +16,7 @@ builder.Services.AddMediatR(
     cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()
                                                        .First(x => x.GetName().Name == "PizzaSystem.Core")));
 
+builder.Services.AddSignalR();
 builder.Services.AddCoreServices();
 builder.Services.AddPersistenceServices();
 
@@ -33,5 +34,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<OrderHub>("/order-hub");
 
 app.Run();
