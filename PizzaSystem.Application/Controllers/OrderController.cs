@@ -27,6 +27,7 @@ public sealed class OrderController : AbstractApiController<Order>
     public async Task<CreatedAtActionResult> Add([FromBody] Order order)
     {
         var result = 60; // await _orderService.Add(order);
+        // TODO: Zapracovat ku konkretnimu uzivateli
         await _hubContext.Clients.All.SendAsync("NewOrder", $"New order: {result} - has been placed!");
         return CreatedAtAction(nameof(Get), new {id = result}, result);
     }
