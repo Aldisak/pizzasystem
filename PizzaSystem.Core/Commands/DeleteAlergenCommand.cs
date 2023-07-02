@@ -1,9 +1,17 @@
+using FluentValidation;
 using MediatR;
 using PizzaSystem.Core.Interfaces;
 using PizzaSystem.Core.Models;
 
 namespace PizzaSystem.Core.Commands;
 public sealed record DeleteAlergenCommand(int Id) : IRequest<Alergen>;
+public sealed class DeleteAlergenValidator : AbstractValidator<DeleteAlergenCommand>
+{
+    public DeleteAlergenValidator() 
+    {
+        RuleFor(x => x.Id).NotEmpty();
+    }
+}
 public class DeleteAlergenCommandHandler : IRequestHandler<DeleteAlergenCommand, Alergen>
 {
     private readonly IRepository<Alergen> _repository;
