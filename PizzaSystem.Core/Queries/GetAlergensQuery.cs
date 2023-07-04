@@ -1,10 +1,14 @@
+using FluentValidation;
 using MediatR;
 using PizzaSystem.Core.Interfaces;
 using PizzaSystem.Core.Models;
 
 namespace PizzaSystem.Core.Queries;
-
 public sealed record GetAlergensQuery : IRequest<IEnumerable<Alergen>>;
+public sealed class GetAlergensValidator : AbstractValidator<GetAlergensQuery>
+{
+    public GetAlergensValidator() { }
+}
 
 public class GetAlergensQueryHandler : IRequestHandler<GetAlergensQuery, IEnumerable<Alergen>>
 {

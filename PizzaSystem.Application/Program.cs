@@ -1,5 +1,9 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using MediatR;
 using PizzaSystem.Application;
 using PizzaSystem.Core;
+using PizzaSystem.Core.Middleware;
 using PizzaSystem.Persistence;
 using PizzaSystem.Persistence.DataStorage.Databases;
 
@@ -12,6 +16,13 @@ builder.Services.AddControllers().ConfigureApiBehaviorOptions(options => options
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Validators
+builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
+builder.Services.AddValidatorsFromAssembly(AppDomain.CurrentDomain.GetAssemblies()
+                                                    .First(x => x.GetName().Name == "PizzaSystem.Core"));
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
 builder.Services.AddMediatR(
     cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()
                                                        .First(x => x.GetName().Name == "PizzaSystem.Core")));
