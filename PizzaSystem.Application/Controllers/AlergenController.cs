@@ -1,8 +1,9 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PizzaSystem.Core.Commands;
+using PizzaSystem.Core.Entities;
 using PizzaSystem.Core.Exceptions;
-using PizzaSystem.Core.Models;
 using PizzaSystem.Core.Queries;
 
 namespace PizzaSystem.Application.Controllers;
