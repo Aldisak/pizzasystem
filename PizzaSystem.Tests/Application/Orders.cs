@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using PizzaSystem.Application.Controllers;
+using PizzaSystem.Core.Entities;
 using PizzaSystem.Core.Interfaces;
-using PizzaSystem.Core.Models;
 
 namespace Tests.Application
 {

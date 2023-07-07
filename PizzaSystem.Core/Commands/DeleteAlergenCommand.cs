@@ -1,7 +1,7 @@
 using FluentValidation;
 using MediatR;
+using PizzaSystem.Core.Entities;
 using PizzaSystem.Core.Interfaces;
-using PizzaSystem.Core.Models;
 
 namespace PizzaSystem.Core.Commands;
 public sealed record DeleteAlergenCommand(int Id) : IRequest<Alergen>;

@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
+using PizzaSystem.Core.Entities;
 using PizzaSystem.Core.Interfaces;
-using PizzaSystem.Core.Models;
 using PizzaSystem.Persistence.DataStorage.Databases;
 
 namespace PizzaSystem.Persistence;

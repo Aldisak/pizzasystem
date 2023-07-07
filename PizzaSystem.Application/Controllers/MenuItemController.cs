@@ -1,7 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using PizzaSystem.Core.Entities;
 using PizzaSystem.Core.Interfaces;
-using PizzaSystem.Core.Models;
 
 namespace PizzaSystem.Application.Controllers;
 

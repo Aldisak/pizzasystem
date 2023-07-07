@@ -1,6 +1,6 @@
 using PizzaSystem.Core.Interfaces;
 
-namespace PizzaSystem.Core.Models;
+namespace PizzaSystem.Core.Entities;
 public sealed record Ingredient : IEntity<Ingredient>
 {
     public required int Id { get; init; }

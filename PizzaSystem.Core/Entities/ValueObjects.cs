@@ -1,4 +1,4 @@
-namespace PizzaSystem.Core.Models;
+namespace PizzaSystem.Core.Entities;
 
 public record struct CustomerContact(CustomerName CustomerName, Phone PhoneNumber, Address Address);
 public record struct OrderDetails(OrderStatus Status, DeliveryType DeliveryType, DateTime CreatedAt, DateTime? UpdatedAt);

@@ -1,8 +1,8 @@
 using FluentValidation;
 using MediatR;
+using PizzaSystem.Core.Entities;
 using PizzaSystem.Core.Exceptions;
 using PizzaSystem.Core.Interfaces;
-using PizzaSystem.Core.Models;
 
 namespace PizzaSystem.Core.Queries;
 

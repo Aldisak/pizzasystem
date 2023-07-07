@@ -1,8 +1,8 @@
 using FluentValidation;
 using Mapster;
 using MediatR;
+using PizzaSystem.Core.Entities;
 using PizzaSystem.Core.Interfaces;
-using PizzaSystem.Core.Models;
 
 namespace PizzaSystem.Core.Commands;
 public sealed record CreateAlergenCommand(int Order, string Title, string Description) : IRequest<int>;
